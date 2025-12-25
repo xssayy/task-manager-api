@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { FilterTaskDto } from './dto/filter-task.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Task } from '@prisma/client';
 import {
@@ -16,8 +17,12 @@ export class TaskService {
     return await this.prisma.task.create({ data: createTaskDto });
   }
 
-  async findAll(): Promise<Task[]> {
-    return await this.prisma.task.findMany();
+  async findAll(filterDto?: FilterTaskDto): Promise<Task[]> {
+    const where = filterDto?.status ? { status: filterDto.status } : {};
+    const orderBy = {
+      [filterDto?.sort || 'createdAt']: filterDto?.order || 'desc',
+    };
+    return await this.prisma.task.findMany({ where, orderBy });
   }
 
   /**

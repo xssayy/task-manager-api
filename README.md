@@ -70,6 +70,22 @@ Swagger UI is available at: `http://localhost:3001/api`
 | `PATCH`  | `/task/:id` | Update task    |
 | `DELETE` | `/task/:id` | Delete task    |
 
+### Query Parameters
+
+| Parameter | Values                                     | Description                       |
+| --------- | ------------------------------------------ | --------------------------------- |
+| `status`  | `TODO`, `IN_PROGRESS`, `DONE`, `CANCELLED` | Filter by status                  |
+| `sort`    | `createdAt`, `updatedAt`, `title`          | Sort field (default: `createdAt`) |
+| `order`   | `asc`, `desc`                              | Sort order (default: `desc`)      |
+
+**Examples:**
+
+```
+GET /task?status=TODO
+GET /task?sort=title&order=asc
+GET /task?status=IN_PROGRESS&sort=createdAt&order=desc
+```
+
 ## Task Model
 
 ```typescript

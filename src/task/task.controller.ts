@@ -6,16 +6,19 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import {
   TaskDto,
   UpdateTaskResponseDto,
   DeleteTaskResponseDto,
 } from './dto/task-response.dto';
+import { FilterTaskDto } from './dto/filter-task.dto';
+import { TaskStatus } from '@prisma/client';
 
 @ApiTags('Tasks')
 @Controller('task')
@@ -34,14 +37,32 @@ export class TaskController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all tasks' })
+  @ApiOperation({ summary: 'Get all tasks with filtering and sorting' })
+  @ApiQuery({
+    name: 'status',
+    enum: TaskStatus,
+    required: false,
+    description: 'Filter by status',
+  })
+  @ApiQuery({
+    name: 'sort',
+    enum: ['createdAt', 'updatedAt', 'title'],
+    required: false,
+    description: 'Sort by field (default: createdAt)',
+  })
+  @ApiQuery({
+    name: 'order',
+    enum: ['asc', 'desc'],
+    required: false,
+    description: 'Sort order (default: desc)',
+  })
   @ApiResponse({
     status: 200,
     description: 'List of all tasks',
     type: [TaskDto],
   })
-  async findAll() {
-    return await this.taskService.findAll();
+  async findAll(@Query() filterDto: FilterTaskDto) {
+    return await this.taskService.findAll(filterDto);
   }
 
   @Get(':id')
