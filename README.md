@@ -13,7 +13,7 @@ REST API for task management built with NestJS, PostgreSQL, and Prisma ORM.
 
 ## Requirements
 
-- Node.js 18+
+- Node.js ^20.19.0, ^22.12.0, or ^24.0.0
 - Docker & Docker Compose
 - npm
 
